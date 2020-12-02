@@ -13,8 +13,7 @@ with open('input') as f:
         lmin = int(lmin)
         lmax = int(lmax)
 
-        count = password.count(letter)
-        if lmin <= count <= lmax:
+        if lmin <= password.count(letter) <= lmax:
             correct_count_1 += 1
 
         in_pos_1 = (password[lmin - 1] == letter)
