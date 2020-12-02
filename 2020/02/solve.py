@@ -8,8 +8,7 @@ with open('input') as f:
     correct_count_2 = 0
 
     for line in lines:
-        groups = re.match(r"(\d+)-(\d+) (\w): (\w+)$", line).groups()
-        lmin, lmax, letter, password = groups
+        lmin, lmax, letter, password = re.match(r"(\d+)-(\d+) (\w): (\w+)$", line).groups()
         lmin = int(lmin)
         lmax = int(lmax)
 
