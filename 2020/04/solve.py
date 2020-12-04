@@ -60,7 +60,7 @@ with open('input') as f:
                         flags_2['hgt'] = (59 <= int(vv) <= 76)
             if name == "hcl":
                 match = re.match(r"^#[a-f0-9]{6}$", value)
-                flags_2['hcl'] = match != None
+                flags_2['hcl'] = (match != None)
             if name == "ecl":
                 flags_2['ecl'] = (value in ['amb', 'blu', 'brn', 'gry', 'grn', 'hzl', 'oth'])
             if name == "pid":
