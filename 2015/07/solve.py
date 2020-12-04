@@ -1,47 +1,61 @@
 #!/usr/local/bin/python3
 import re
 import numpy as np
-from collections import defaultdict
 
-def normalize_value(value):
-    return np.array([value],dtype="uint16")[0]
+def eval_expression(expression):
+    if type(expression) == str:
+        if ('AND' in expression) or ('OR' in expression) or ('SHIFT' in expression):
+            a, op, b = expression.split(' ')
 
-def resolve_variable(var, registers):
-    if var.isnumeric():
-        return normalize_value(int(var))
-    else:
-        return registers[var]
-
-with open('input') as f:
-    lines = f.read().split('\n')
-
-    registers = defaultdict(lambda: 0)
-
-    for line in lines:
-        ss = line.split(" -> ")
-        lhs = ss[0]
-        target = ss[1]
-
-        if re.match(r"^(\d)+$", lhs):
-            registers[target] = normalize_value(int(lhs))
-        elif re.match(r"^(.+) (\w+) (.+)$", lhs):
-            groups = re.match(r"^(.+) (\w+) (.+)$", lhs).groups()
-            a = resolve_variable(groups[0], registers)
-            op = groups[1]
-            b = resolve_variable(groups[2], registers)
+            a = resolve_variable(a)
+            b = resolve_variable(b)
 
             if op == 'AND':
-                registers[target] = normalize_value(a & b)
+                return normalize_value(a & b)
             elif op == 'OR':
-                registers[target] = normalize_value(a | b)
+                return normalize_value(a | b)
             elif op == 'LSHIFT':
-                registers[target] = normalize_value(a << b)
+                return normalize_value(a << b)
             elif op == 'RSHIFT':
-                registers[target] = normalize_value(a >> b)
+                return normalize_value(a >> b)
 
-        elif re.match(r"^NOT (.)+$", lhs):
-            source = resolve_variable(lhs[4:], registers)
-            registers[target] = normalize_value(~source)
+        elif re.match(r"^NOT (.)+$", expression):
+            source = resolve_variable(expression[4:])
+            return normalize_value(~source)
 
-    print(registers)
-    print(f"value of a: {registers['a']}")
+    return resolve_variable(expression)
+
+def resolve_variable(name):
+    global wires
+    if type(name) == np.uint16:
+        return name
+    elif type(name) == int:
+        return normalize_value(name)
+    elif name.isnumeric():
+        return normalize_value(int(name))
+    else:
+        wires[name] = eval_expression(wires[name])
+        return wires[name]
+
+def normalize_value(value):
+    return np.array([value], dtype="uint16")[0]
+
+def load_wires_from_file():
+    global wires
+    wires = dict()
+    with open('input') as f:
+        for line in f.read().splitlines():
+            lhs, target = line.split(" -> ")
+            wires[target] = lhs
+
+# main
+wires = dict()
+
+load_wires_from_file()
+a_value_1 = resolve_variable('a')
+print(f"value of a: {a_value_1}")
+
+load_wires_from_file()
+wires['b'] = a_value_1
+a_value_2 = resolve_variable('a')
+print(f"value of a after override: {a_value_2}")
