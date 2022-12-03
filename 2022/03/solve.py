@@ -2,9 +2,9 @@
 
 def get_priority(char):
     if (char.islower()):
-        return ord(char) - 96
+        return 1 + ord(char) - ord('a')
     else:
-        return 27 + ord(char) - 65
+        return 27 + ord(char) - ord('A')
 
 def chunks(list, chunk_size):
     for i in range(0, len(list), chunk_size): yield list[i:i + chunk_size]
