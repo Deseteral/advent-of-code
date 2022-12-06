@@ -2,8 +2,8 @@
 import re
 from collections import defaultdict
 
-with open('input') as src_stack:
-    lines = src_stack.read().splitlines()
+with open('input') as f:
+    lines = f.read().splitlines()
 
     stacks_a = defaultdict(lambda: [])
     stacks_b = defaultdict(lambda: [])
