@@ -25,7 +25,7 @@ with open('input') as f:
         next_cycle()
         if line == 'noop': continue
 
-        for i in range(0, 1): next_cycle()
+        for _ in range(0, 1): next_cycle()
         x += int(line.split(' ')[1])
 
     # part 1
