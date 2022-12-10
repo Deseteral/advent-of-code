@@ -17,9 +17,8 @@ with open('input') as f:
 
         if cycle in checks: signals.append(cycle * x)
 
-        sprite = (x-1, x, x+1)
         idx = cycle-1
-        screen[idx] = '#' if (idx % 40) in sprite else '.'
+        screen[idx] = '#' if (idx % 40) in (x-1, x, x+1) else '.'
 
     for line in lines:
         next_cycle()
