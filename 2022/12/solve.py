@@ -11,14 +11,15 @@ neighbour_dir = [
 class Graph:
     def __init__(self, num_of_vertices):
         self.v = num_of_vertices
-        self.edges = [[-1 for i in range(num_of_vertices)] for j in range(num_of_vertices)]
+        self.edges = [[-1 for _ in range(num_of_vertices)] for _ in range(num_of_vertices)]
         self.visited = []
 
     def add_edge(self, u, v, weight):
         self.edges[u][v] = weight
+        # self.edges[v][u] = weight
 
 def dijkstra(graph, start_vertex):
-    d = {v:float('inf') for v in range(graph.v)}
+    d = {v: float('inf') for v in range(graph.v)}
     d[start_vertex] = 0
 
     pq = PriorityQueue()
@@ -56,17 +57,18 @@ with open('input') as f:
     for y, line in enumerate(lines):
         for x, c in enumerate(line):
             elevation = None
+            idx = len(vertices)
             if c == 'S':
                 elevation = 0
-                starting_point = len(vertices)
+                starting_point = idx
             elif c == 'E':
                 elevation = ord('z') - 97
-                finish_point = len(vertices)
+                finish_point = idx
             else:
                 elevation = ord(c) - 97
 
             if elevation == 0:
-                lowest_points.append(len(vertices))
+                lowest_points.append(idx)
 
             vertices.append(elevation)
 
