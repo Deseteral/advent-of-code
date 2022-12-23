@@ -7,6 +7,9 @@ import itertools
 from copy import deepcopy
 import numpy as np
 
-# with open('test_input') as f:
-with open('input') as f:
-    lines = f.read().splitlines()
+def main():
+    file = open('input')
+    # file = open('test_input')
+    lines = file.read().splitlines()
+
+if __name__ == '__main__': main()
