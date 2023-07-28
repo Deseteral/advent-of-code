@@ -3,6 +3,7 @@ import itertools
 from copy import copy
 from collections import defaultdict
 from collections import Counter
+import os
 
 def parse_mem(line: str) -> list[int]:
     return list(map(int, line.split(',')))
@@ -125,5 +126,39 @@ def main():
     vm.run()
 
     print(Counter(vm.output[2::3])[2])
+
+    # part 2
+    vm = IntcodeVM(initial_mem)
+    vm.mem[0] = 2
+    vm.input = [0]
+
+    tiles = defaultdict(lambda: 0)
+    paddle_x = 0
+    ball_x = 0
+    score = 0
+
+    while not vm.halted:
+        joystick = 0
+
+        if ball_x > paddle_x:
+            joystick = 1
+        elif ball_x < paddle_x:
+            joystick = -1
+
+        vm.input = [joystick]
+        vm.tick()
+
+        if len(vm.output) == 3:
+            x, y, tile_id = vm.output
+            vm.output = []
+
+            if x == -1 and y == 0:
+                score = tile_id
+            else:
+                tiles[(x, y)] = tile_id
+                if tile_id == 3: paddle_x = x
+                if tile_id == 4: ball_x = x
+
+    print(f"score {score}")
 
 if __name__ == '__main__': main()
