@@ -1,13 +1,30 @@
 #!/usr/local/bin/python3
+import math
+
+categories = []
+
+
+def map_value_to_next_category(value, category):
+    for dst_start, src_range, _ in category:
+        if value in src_range:
+            offset = value - src_range[0]
+            return dst_start + offset
+    return value
+
+
+def map_seed_to_location(initial_value):
+    value = initial_value
+    for cat in categories:
+        value = map_value_to_next_category(value, cat)
+    return value
+
 
 def main():
     file = open('input')
-    # file = open('test_input')
     lines = file.read().splitlines()
 
     # Parsing
     seeds = [int(x) for x in lines[0].split(': ')[1].split(' ')]
-    categories = []
 
     current_category = []
     for line in list(filter(len, lines[3:])):
@@ -20,39 +37,29 @@ def main():
             current_category = []
     categories.append(current_category)
 
-    # Mapping
-    def map_value_to_next_category(value, category):
-        for ds, sr, _ in category:
-            if value in sr:
-                offset = value - sr[0]
-                return ds + offset
-        return value
-
-    def map_seed_to_location(initial_value):
-        value = initial_value
-        for cat in categories:
-            value = map_value_to_next_category(value, cat)
-        return value
-
     # Part 1
-    mapped_seeds = []
-    for seed in seeds:
-        mapped_seeds.append(map_seed_to_location(seed))
+    print(min(map(map_seed_to_location, seeds)))
 
-    print(min(mapped_seeds))
-
-    # Part 2 (brute force)
-    seed_ranges = []
+    # Part 2
+    approx_min = math.inf
+    approx_range = None
     for seed_idx in range(0, len(seeds), 2):
-        seed_ranges.append(range(seeds[seed_idx], seeds[seed_idx] + seeds[seed_idx + 1]))
+        rstart = seeds[seed_idx]
+        rlen = seeds[seed_idx + 1]
+        jmp = math.floor(math.sqrt(rlen))
 
-    lowest = -1
-    for r in seed_ranges:
-        for seed in r:
-            ms = map_seed_to_location(seed)
-            if ms < lowest or lowest == -1:
-                lowest = ms
-                print(lowest)
+        for seed in range(rstart, rstart + rlen, jmp):
+            val = map_seed_to_location(seed)
+            if val < approx_min:
+                approx_min = val
+                approx_range = range(seed - jmp, seed)
+
+    accurate_min = math.inf
+    for seed in approx_range:
+        val = map_seed_to_location(seed)
+        if val < accurate_min:
+            accurate_min = val
+    print(accurate_min)
 
 
 if __name__ == '__main__':
