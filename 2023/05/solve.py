@@ -14,8 +14,8 @@ def map_value_to_next_category(value, category):
 
 def map_seed_to_location(initial_value):
     value = initial_value
-    for cat in categories:
-        value = map_value_to_next_category(value, cat)
+    for category in categories:
+        value = map_value_to_next_category(value, category)
     return value
 
 
