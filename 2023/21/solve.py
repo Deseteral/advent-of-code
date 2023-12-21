@@ -44,14 +44,26 @@ def main():
             break
 
     level = [[x for x in line] for line in lines]
+    level_size = len(level)
 
     # Part 1
-    print(simulate_steps(64, level, (start_x, start_y)))
+    p1_result = simulate_steps(64, level, (start_x, start_y))
+    print(f"result for 64 steps = {p1_result}")
 
     # Part 2
     for i in range(3):
-        step_count = start_x + (len(level) * i)
-        print(simulate_steps(step_count, level, (start_x, start_y)))
+        step_count = start_x + (level_size * i)
+        print(f"x{i} = {simulate_steps(step_count, level, (start_x, start_y))}")
 
-        if __name__ == '__main__':
-            main()
+    target_steps = 26501365
+
+    # Given x0, x1, x2 I have asked Wolfram Alpha to give me a second degree
+    # polynomial that fits this values. The result is used below.
+    x = (target_steps - start_x) // level_size
+    result = (15286 * (x ** 2)) + (15394 * x) + 3884
+
+    print(f"result for {target_steps} steps = {result}")
+
+
+if __name__ == '__main__':
+    main()
