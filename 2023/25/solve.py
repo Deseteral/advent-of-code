@@ -1,57 +1,53 @@
 #!/usr/local/bin/python3
+import math
 from collections import defaultdict
-from copy import deepcopy
 
 
 def main():
     file = open('input')
     lines = file.read().splitlines()
 
-    comp = defaultdict(lambda: set())
-    connections = set()
+    components = defaultdict(lambda: set())
 
     for line in lines:
         src, target = line.split(': ')
         target = target.split(' ')
 
         for t in target:
-            comp[src].add(t)
-            comp[t].add(src)
-            c = tuple(sorted([src, t]))
-            connections.add(c)
+            components[src].add(t)
+            components[t].add(src)
 
-    # for cut in itertools.combinations(connections, 3):
-    for cut in [(('zsp', 'fhv'), ('fqr', 'bqp'), ('hcd', 'cnr'))]:
-        cc = deepcopy(comp)
-        src_queue = []
-        for cs, ct in cut:
-            cc[cs].remove(ct)
-            cc[ct].remove(cs)
-            src_queue.append(cs)
-            src_queue.append(ct)
+    # Used Graphviz to find two groups of components and three pairs of components connecting them.
+    connections_to_cut = [('zsp', 'fhv'), ('fqr', 'bqp'), ('hcd', 'cnr')]
 
-        visited = set()
-        group = -1
-        group_size = []
-        while len(src_queue) > 0:
-            queue = [src_queue.pop()]
-            group += 1
-            group_size.append(0)
+    src_queue = []
+    for cs, ct in connections_to_cut:
+        components[cs].remove(ct)
+        components[ct].remove(cs)
+        src_queue.append(cs)
+        src_queue.append(ct)
 
-            while len(queue) > 0:
-                curr = queue.pop()
+    visited = set()
+    group = -1
+    group_size = []
+    while len(src_queue) > 0:
+        queue = [src_queue.pop()]
+        group += 1
+        group_size.append(0)
 
-                if curr in visited:
-                    continue
+        while len(queue) > 0:
+            curr = queue.pop()
 
-                visited.add(curr)
-                group_size[group] += 1
+            if curr in visited:
+                continue
 
-                for n in cc[curr]:
-                    queue.append(n)
+            visited.add(curr)
+            group_size[group] += 1
 
-        if group_size[1] != 0:
-            print(group_size[0] * group_size[1])
+            for n in components[curr]:
+                queue.append(n)
+
+    print(math.prod(filter(lambda x: x != 0, group_size)))
 
 
 if __name__ == '__main__':
