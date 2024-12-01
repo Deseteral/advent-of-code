@@ -7,5 +7,6 @@ charset = utf-8
 trim_trailing_whitespace = true
 insert_final_newline = true
 
-[*.js]
-indent_size = 2
+[{input,test_input}]
+trim_trailing_whitespace = false
+insert_final_newline = false
