@@ -1,4 +1,5 @@
 #!/usr/local/bin/python3
+import sys
 # import re
 # import math
 # from collections import defaultdict
@@ -8,11 +9,10 @@
 # import numpy as np
 
 
-def main():
-    file = open('input')
-    # file = open('test_input')
-    lines = file.read().splitlines()
+def main(input_file):
+    lines = input_file.read().splitlines()
 
 
 if __name__ == '__main__':
-    main()
+    env_test_run = sys.argv[-1] == '-t'
+    main(open('input' if not env_test_run else 'test_input'))
