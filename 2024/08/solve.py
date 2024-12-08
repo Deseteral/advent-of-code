@@ -3,6 +3,7 @@ import sys
 from collections import defaultdict
 from itertools import product, repeat, permutations, count
 
+
 def main(input_file):
     level = input_file.read().splitlines()
 
@@ -41,7 +42,6 @@ def main(input_file):
                     unique_antinode_positions.add(antinode_pos)
                 else:
                     break
-
 
     print(len(unique_antinode_positions_doubled_distance))
     print(len(unique_antinode_positions))
