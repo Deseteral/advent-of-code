@@ -1,3 +1,6 @@
-*.exe
 .DS_Store
-.idea
+
+**/input
+!templates/input
+**/test_input
+!templates/test_input
