@@ -46,8 +46,8 @@ neighbour_dir = [
 
 
 class Region:
-    def __init__(self, char, tiles, area, perimeter, vertex_count):
-        self.char = char
+    def __init__(self, type, tiles, area, perimeter, vertex_count):
+        self.type = type
         self.tiles = tiles
         self.area = area
         self.perimeter = perimeter
@@ -113,14 +113,13 @@ def main(input_file):
 
     for region in regions:
         region.vertex_count = 0
-        c = region.char
         for pos in region.tiles:
             for p1, p2, p3 in lookup:
                 pp1 = pos + p1
                 pp2 = pos + p2
                 pp3 = pos + p3
-                is_concave_vertex = (at_pos(pp1) == c and at_pos(pp3) == c and at_pos(pp2) != c)
-                is_convex_vertex = (at_pos(pp1) != c and at_pos(pp3) != c)
+                is_concave_vertex = (at_pos(pp1) == region.type and at_pos(pp3) == region.type and at_pos(pp2) != region.type)
+                is_convex_vertex = (at_pos(pp1) != region.type and at_pos(pp3) != region.type)
                 if is_concave_vertex or is_convex_vertex:
                     region.vertex_count += 1
 
