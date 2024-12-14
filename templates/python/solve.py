@@ -9,10 +9,10 @@ import sys
 # import numpy as np
 
 
-def main(input_file):
+def main(input_file, _):
     lines = input_file.read().splitlines()
 
 
 if __name__ == '__main__':
     env_test_run = sys.argv[-1] == '-t'
-    main(open('input' if not env_test_run else 'test_input'))
+    main(open('input' if not env_test_run else 'test_input'), env_test_run)
