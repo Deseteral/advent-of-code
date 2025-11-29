@@ -3,8 +3,15 @@ import java.security.MessageDigest
 import kotlin.io.path.Path
 import kotlin.io.path.readText
 
-class Task(val year: String, val day: String) {
+class AdventPuzzle(val year: String, val day: String) {
+    /**
+     * Input for this day.
+     */
     val input: String get() = readInput(test = false)
+
+    /**
+     * Test input for this day.
+     */
     val testInput: String get() = readInput(test = true)
 
     private fun readInput(test: Boolean): String {
@@ -12,11 +19,14 @@ class Task(val year: String, val day: String) {
         val path = if (test) "$basePath/test_input" else "$basePath/input"
         return Path(path).readText().trim()
     }
-}
 
-enum class Part {
-    PART_1,
-    PART_2,
+    /**
+     * Identifier for part 1 or 2 of this day's puzzle task.
+     */
+    enum class Part {
+        PART_1,
+        PART_2,
+    }
 }
 
 /**
@@ -31,6 +41,14 @@ fun String.md5() = BigInteger(1, MessageDigest.getInstance("MD5").digest(toByteA
  */
 fun Any?.println() = println(this)
 
-fun <T: Any> expect(value: T, toBe: T) {
-    check(value == toBe) { "Expected $value to be $toBe" }
+/**
+ * Checks if two values are the same and prints out message when they are not.
+ */
+fun <T: Any> expect(value: T, toEqual: T) {
+    check(value == toEqual) { "Expected '$value' to be '$toEqual'." }
 }
+
+/**
+ * Returns middle element of that list.
+ */
+val <T> List<T>.middleElement get() = this[this.size / 2]
