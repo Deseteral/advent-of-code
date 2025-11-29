@@ -44,8 +44,9 @@ fun Any?.println() = println(this)
 /**
  * Checks if two values are the same and prints out message when they are not.
  */
-fun <T : Any> expect(value: T, toEqual: T) {
+fun <T : Any> answer(value: T, toEqual: T) {
     check(value == toEqual) { "Expected '$value' to be '$toEqual'." }
+    println("$value is correct answer!")
 }
 
 /**

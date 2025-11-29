@@ -47,9 +47,9 @@ private fun part2(input: String): Int = solve(input, PART_2)
 fun main() {
     val task = AdventPuzzle("2024", "08")
 
-    expect(value = part1(task.testInput), toEqual = 14)
-    expect(value = part2(task.testInput), toEqual = 34)
+    answer(value = part1(task.testInput), toEqual = 14)
+    answer(value = part2(task.testInput), toEqual = 34)
 
-    expect(value = part1(task.input), toEqual = 351)
-    expect(value = part2(task.input), toEqual = 1259)
+    answer(value = part1(task.input), toEqual = 351)
+    answer(value = part2(task.input), toEqual = 1259)
 }
