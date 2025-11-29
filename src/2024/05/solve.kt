@@ -1,6 +1,6 @@
 import AdventPuzzle.Part.*
 
-fun solve(input: String, part: AdventPuzzle.Part): Int {
+private fun solve(input: String, part: AdventPuzzle.Part): Int {
     val (rulesSection, pagesSection) = input.split("\n\n")
 
     val adj = mutableMapOf<Int, MutableList<Int>>()
@@ -31,8 +31,8 @@ fun solve(input: String, part: AdventPuzzle.Part): Int {
     }
 }
 
-fun part1(input: String): Int = solve(input, PART_1)
-fun part2(input: String): Int = solve(input, PART_2)
+private fun part1(input: String): Int = solve(input, PART_1)
+private fun part2(input: String): Int = solve(input, PART_2)
 
 fun main() {
     val task = AdventPuzzle("2024", "05")
