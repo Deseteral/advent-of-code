@@ -1,6 +1,12 @@
 .DS_Store
 
 **/input
-!templates/input
+!templates/**/input
 **/test_input
-!templates/test_input
+!templates/**/test_input
+
+.gradle
+.idea
+.kotlin/
+build
+local.properties
