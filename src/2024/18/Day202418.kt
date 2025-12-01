@@ -45,7 +45,8 @@ fun main() {
                     return line
                 }
             }
-            throw IllegalStateException("This should never be reached.")
+
+            unreachable()
         }
 
         answer(value = part1(), toEqual = if (isTestRun) 22 else 290)

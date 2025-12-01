@@ -60,6 +60,8 @@ fun <T : Any> answer(value: T, toEqual: T) {
  */
 fun count(start: Int, step: Int) = generateSequence(start) { it + step }
 
+fun unreachable(): Nothing = throw IllegalStateException("This should not happen!")
+
 /**
  * Returns middle element of that list.
  */
