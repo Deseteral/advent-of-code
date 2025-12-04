@@ -150,6 +150,34 @@ class Grid<TileT>(val tiles: MutableList<MutableList<TileT>>) : Iterable<Grid.En
     fun isInBounds(position: Vec2i) =
         position.x in 0..<width && position.y in 0..<height
 
+    fun getNeighboursOfTile(position: Vec2i, withDiagonals: Boolean): List<Entry<TileT>> {
+        return (if (withDiagonals) Vec2i.directionsWithDiagonals else Vec2i.directions)
+            .map { position + it }
+            .filter { isInBounds(it) }
+            .map { Entry(it, get(it)) }
+    }
+
+    fun print(tilePrinter: (entry: Entry<TileT>) -> Char) {
+        for (y in 0..<height) {
+            for (x in 0..<width) {
+                val c = tilePrinter(Entry(Vec2i(x, y), get(x, y)))
+                print(c)
+            }
+            println("")
+        }
+        println("")
+    }
+
+    fun entries(): List<Entry<TileT>> {
+        val entries = mutableListOf<Entry<TileT>>()
+        for (y in 0..<height) {
+            for (x in 0..<width) {
+                entries.add(Entry(Vec2i(x, y), get(x, y)))
+            }
+        }
+        return entries.toList()
+    }
+
     override fun iterator(): Iterator<Entry<TileT>> {
         return GridIterator(this)
     }
