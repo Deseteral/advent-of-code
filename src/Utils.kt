@@ -67,6 +67,12 @@ fun unreachable(): Nothing = throw IllegalStateException("This should not happen
  */
 val <T> List<T>.middleElement get() = this[this.size / 2]
 
+
+/**
+ * Returns 0 for false, 1 for true.
+ */
+fun Boolean.toInt() = if (this) 1 else 0
+
 data class Vec2i(val x: Int, val y: Int) {
     operator fun plus(v: Vec2i) = Vec2i(x + v.x, y + v.y)
     operator fun minus(v: Vec2i) = Vec2i(x - v.x, y - v.y)
@@ -274,3 +280,49 @@ fun <NodeT> dijkstraDoublePrecision(
     isEndNode: (NodeT) -> Boolean,
 ): DijkstraResult<NodeT, Double> =
     dijkstra(startingNodes, getConnectedNodes, getEdgeWeight, isEndNode, addDistanceFn = { a, b -> a + b })
+
+/**
+ * Calculate the count of distinct values in that range.
+ * Does not create a collection with all values in it.
+ */
+fun LongRange.distinctValueCount() = this.last - this.first + 1L
+
+fun List<LongRange>.reduceMergeRanges(): List<LongRange> {
+    val ranges = this.sortedBy { it.first }
+    val reducedRanges = mutableListOf<LongRange>()
+
+    var current = ranges.first()
+
+    for (range in ranges.subList(1, ranges.size)) {
+        if (range.first in current) {
+            /*
+             *       ┌──────── range A ────────┐
+             * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━▶
+             *    └───── range B ─────┘
+             *
+             * or
+             *
+             *         ┌─ range A ─┐
+             * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━▶
+             *    └──────── range B ────────┘
+             *
+             * Ranges are overlapping - merge them.
+             */
+            val last = maxOf(range.last, current.last)
+            current = current.first..last
+        } else {
+            /*
+             *                   ┌─ range A ─┐
+             * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━▶
+             *    └─ range B ─┘
+             *
+             * Ranges are not overlapping - move on.
+             */
+            reducedRanges.add(current)
+            current = range
+        }
+    }
+    reducedRanges.add(current)
+
+    return reducedRanges.toList()
+}
