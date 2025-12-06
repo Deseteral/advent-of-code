@@ -1,6 +1,7 @@
 import java.math.BigInteger
 import java.security.MessageDigest
 import java.util.PriorityQueue
+import kotlin.collections.mutableListOf
 import kotlin.io.path.Path
 import kotlin.io.path.readText
 
@@ -136,6 +137,13 @@ class Grid<TileT>(val tiles: MutableList<MutableList<TileT>>) : Iterable<Grid.En
     val width: Int get() = tiles[0].size
     val height: Int get() = tiles.size
 
+    val rows: List<List<TileT>> get() = tiles
+
+    val columns: List<List<TileT>>
+        get() = (0..<width).map { x ->
+            (0..<height).map { y -> tiles[y][x] }
+        }
+
     operator fun get(position: Vec2i) = tiles[position.y][position.x]
     operator fun get(x: Int, y: Int) = tiles[y][x]
 
@@ -197,6 +205,10 @@ class Grid<TileT>(val tiles: MutableList<MutableList<TileT>>) : Iterable<Grid.En
         fun <TileT> fromRepeatingValue(value: TileT, width: Int, height: Int): Grid<TileT> {
             val tiles = MutableList(height) { MutableList(width) { value } }
             return Grid(tiles)
+        }
+
+        fun <TileT> fromTwoDimensionalCollection(tiles: Collection<Collection<TileT>>): Grid<TileT> {
+            return Grid(tiles.map { it.toMutableList() }.toMutableList())
         }
     }
 
@@ -325,4 +337,32 @@ fun List<LongRange>.reduceMergeRanges(): List<LongRange> {
     reducedRanges.add(current)
 
     return reducedRanges.toList()
+}
+
+fun <ElementT : Any> List<ElementT>.chunkBy(separator: ElementT): List<List<ElementT>> {
+    return this
+        .fold(mutableListOf(mutableListOf<ElementT>())) { acc, element ->
+            if (element == separator) {
+                acc.add(mutableListOf())
+            } else {
+                acc.last().add(element)
+            }
+            acc
+        }
+        .filter { it.isNotEmpty() }
+}
+
+fun diffTool(a: List<Any>, b: List<Any>) {
+    if (a.size != b.size) {
+        "Lists are not the same size. a.size = ${a.size}, b.size = ${b.size}.".println()
+    }
+
+    for (idx in 0..<maxOf(a.size, b.size)) {
+        if (a[idx] != b[idx]) {
+            "Elements at idx $idx are not the same!".println()
+            "  a[$idx] = ${a[idx]},".println()
+            "  b[$idx] = ${b[idx]}.".println()
+            throw IllegalStateException("Diff tool comparison failed!")
+        }
+    }
 }
