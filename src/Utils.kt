@@ -91,20 +91,33 @@ data class Vec2i(val x: Int, val y: Int) {
 
     fun distance(to: Vec2i) = Vec2i(to.x - x, to.y - y)
 
+    enum class YAxisInversion {
+        NORMAL,
+        INVERTED,
+    }
+
     companion object {
+        var yAxis: YAxisInversion = YAxisInversion.NORMAL
+
         val zero: Vec2i get() = Vec2i(0, 0)
+
+        val north: Vec2i get() = Vec2i(0, when(yAxis) {
+            YAxisInversion.NORMAL -> 1
+            YAxisInversion.INVERTED -> -1
+        })
+        val east: Vec2i get() = Vec2i(1, 0)
+        val south: Vec2i get() = Vec2i(0, when(yAxis) {
+            YAxisInversion.NORMAL -> -1
+            YAxisInversion.INVERTED -> 1
+        })
+        val west: Vec2i get() = Vec2i(-1, 0)
 
         /**
          * Vectors for north, east, south, west.
          * ↑ → ↓ ←
          */
         val directions: List<Vec2i>
-            get() = listOf(
-                Vec2i(0, 1),
-                Vec2i(1, 0),
-                Vec2i(0, -1),
-                Vec2i(-1, 0),
-            )
+            get() = listOf(north, east, south, west)
 
         /**
          * Vectors for north, north-east, east, south-east, south, south-west, west, north-west.
@@ -112,14 +125,14 @@ data class Vec2i(val x: Int, val y: Int) {
          */
         val directionsWithDiagonals: List<Vec2i>
             get() = listOf(
-                Vec2i(0, 1),
-                Vec2i(1, 1),
-                Vec2i(1, 0),
-                Vec2i(1, -1),
-                Vec2i(0, -1),
-                Vec2i(-1, -1),
-                Vec2i(-1, 0),
-                Vec2i(-1, 1),
+                north,
+                north + east,
+                east,
+                south + east,
+                south,
+                south + west,
+                west,
+                north + west,
             )
 
 
