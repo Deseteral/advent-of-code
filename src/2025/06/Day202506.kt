@@ -55,7 +55,7 @@ private data class MathProblem(val numbers: List<Long>, val operation: MathOpera
     val solution: Long
         get() = when (operation) {
             MathOperation.SUM -> numbers.sum()
-            MathOperation.MULTIPLY -> numbers.fold(1) { acc, i -> acc * i }
+            MathOperation.MULTIPLY -> numbers.multiply()
         }
 }
 

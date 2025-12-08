@@ -4,6 +4,8 @@ import java.util.PriorityQueue
 import kotlin.collections.mutableListOf
 import kotlin.io.path.Path
 import kotlin.io.path.readText
+import kotlin.math.pow
+import kotlin.math.sqrt
 
 class AdventPuzzle(val year: String, val day: String) {
     /**
@@ -68,6 +70,11 @@ fun unreachable(): Nothing = throw IllegalStateException("This should not happen
  */
 val <T> List<T>.middleElement get() = this[this.size / 2]
 
+@kotlin.jvm.JvmName("productOfInt")
+fun List<Int>.multiply(): Long = this.fold(1L) { acc, i -> acc * i.toLong() }
+
+@kotlin.jvm.JvmName("productOfLong")
+fun List<Long>.multiply(): Long = this.fold(1L) { acc, i -> acc * i }
 
 /**
  * Returns 0 for false, 1 for true.
@@ -87,7 +94,7 @@ data class Vec2i(val x: Int, val y: Int) {
 
     fun equals(other: Vec2i) = x == other.x && y == other.y
 
-    override fun toString(): String = "Vec2($x, $y)"
+    override fun toString(): String = "Vec2i($x, $y)"
 
     fun distance(to: Vec2i) = Vec2i(to.x - x, to.y - y)
 
@@ -101,15 +108,21 @@ data class Vec2i(val x: Int, val y: Int) {
 
         val zero: Vec2i get() = Vec2i(0, 0)
 
-        val north: Vec2i get() = Vec2i(0, when(yAxis) {
-            YAxisInversion.NORMAL -> 1
-            YAxisInversion.INVERTED -> -1
-        })
+        val north: Vec2i
+            get() = Vec2i(
+                0, when (yAxis) {
+                    YAxisInversion.NORMAL -> 1
+                    YAxisInversion.INVERTED -> -1
+                }
+            )
         val east: Vec2i get() = Vec2i(1, 0)
-        val south: Vec2i get() = Vec2i(0, when(yAxis) {
-            YAxisInversion.NORMAL -> -1
-            YAxisInversion.INVERTED -> 1
-        })
+        val south: Vec2i
+            get() = Vec2i(
+                0, when (yAxis) {
+                    YAxisInversion.NORMAL -> -1
+                    YAxisInversion.INVERTED -> 1
+                }
+            )
         val west: Vec2i get() = Vec2i(-1, 0)
 
         /**
@@ -139,6 +152,39 @@ data class Vec2i(val x: Int, val y: Int) {
         fun fromCommaSeparatedText(text: String): Vec2i {
             val (x, y) = text.split(',').map { it.toInt() }
             return Vec2i(x, y)
+        }
+    }
+}
+
+data class Vec3i(val x: Int, val y: Int, val z: Int) {
+    operator fun plus(v: Vec3i) = Vec3i(x + v.x, y + v.y, z + v.z)
+    operator fun minus(v: Vec3i) = Vec3i(x - v.x, y - v.y, z - v.z)
+    operator fun times(v: Vec3i) = Vec3i(x * v.x, y * v.y, z * v.z)
+    operator fun div(v: Vec3i) = Vec3i(x / v.x, y / v.y, z / v.z)
+
+    operator fun plus(v: Int) = Vec3i(x + v, y + v, z + v)
+    operator fun minus(v: Int) = Vec3i(x - v, y - v, z - v)
+    operator fun times(v: Int) = Vec3i(x * v, y * v, z * v)
+    operator fun div(v: Int) = Vec3i(x / v, y / v, z / v)
+
+    fun equals(other: Vec3i) = x == other.x && y == other.y && z == other.z
+
+    override fun toString(): String = "Vec3i($x, $y, $z)"
+
+    fun distance(to: Vec3i) =
+        sqrt((x - to.x).toDouble().pow(2) + (y - to.y).toDouble().pow(2) + (z - to.z).toDouble().pow(2))
+
+    enum class YAxisInversion {
+        NORMAL,
+        INVERTED,
+    }
+
+    companion object {
+        val zero: Vec3i get() = Vec3i(0, 0, 0)
+
+        fun fromCommaSeparatedText(text: String): Vec3i {
+            val (x, y, z) = text.split(',').map { it.toInt() }
+            return Vec3i(x, y, z)
         }
     }
 }
