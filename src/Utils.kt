@@ -425,3 +425,8 @@ fun diffTool(a: List<Any>, b: List<Any>) {
         }
     }
 }
+fun <T> Set<T>.symmetricDifference(other: Set<T>): Set<T> {
+    val onlyInThis = this.minus(other)
+    val onlyInOther = other.minus(this)
+    return onlyInThis.union(onlyInOther)
+}
