@@ -4,6 +4,8 @@ import java.util.PriorityQueue
 import kotlin.collections.mutableListOf
 import kotlin.io.path.Path
 import kotlin.io.path.readText
+import kotlin.math.abs
+import kotlin.math.min
 import kotlin.math.pow
 import kotlin.math.sqrt
 
@@ -425,8 +427,56 @@ fun diffTool(a: List<Any>, b: List<Any>) {
         }
     }
 }
+
 fun <T> Set<T>.symmetricDifference(other: Set<T>): Set<T> {
     val onlyInThis = this.minus(other)
     val onlyInOther = other.minus(this)
     return onlyInThis.union(onlyInOther)
+}
+
+infix fun Int.toward(to: Int): IntProgression {
+    val step = if (this > to) -1 else 1
+    return IntProgression.fromClosedRange(this, to, step)
+}
+
+fun <T : Any> List<T>.pairwise(circular: Boolean = false): Sequence<Pair<T, T>> {
+    val list = this
+    return sequence {
+        val range = if (circular) 1..list.size else 1..<list.size
+        for (idx in range) {
+            val previous = list[idx - 1]
+            val current = list[idx % list.size]
+            yield(Pair(previous, current))
+        }
+    }
+}
+
+data class Rectangle(val position: Vec2i, val width: Int, val height: Int) {
+    val area: Long get() = width.toLong() * height.toLong()
+
+    val corners: List<Vec2i>
+        get() = listOf(
+            position,
+            Vec2i(position.x + width - 1, position.y),
+            Vec2i(position.x + width - 1, position.y + height - 1),
+            Vec2i(position.x, position.y + height - 1),
+        )
+
+    companion object {
+        fun fromOppositeCorners(a: Vec2i, b: Vec2i): Rectangle {
+            // Determine the top-left coordinates.
+            val minX = minOf(a.x, b.x)
+            val minY = minOf(a.y, b.y)
+
+            // Determine the bottom-right coordinates.
+            val maxX = maxOf(a.x, b.x)
+            val maxY = maxOf(a.y, b.y)
+
+            return Rectangle(
+                position = Vec2i(minX, minY),
+                width = maxX - minX + 1,
+                height = maxY - minY + 1,
+            )
+        }
+    }
 }
