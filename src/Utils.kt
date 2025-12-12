@@ -78,6 +78,11 @@ fun List<Int>.multiply(): Long = this.fold(1L) { acc, i -> acc * i.toLong() }
 @kotlin.jvm.JvmName("productOfLong")
 fun List<Long>.multiply(): Long = this.fold(1L) { acc, i -> acc * i }
 
+fun <T> List<T>.toPair(): Pair<T, T> = Pair(this[0], this[1])
+
+fun List<Boolean>.countTrue(): Int = this.count { it }
+fun List<Boolean>.countFalse(): Int = this.count { !it }
+
 /**
  * Returns 0 for false, 1 for true.
  */
